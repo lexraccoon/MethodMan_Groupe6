@@ -1,0 +1,184 @@
+{% extends 'home/layout.html.twig' %}
+
+{% block title %}MethodMan{% endblock %}
+
+{% block body %}
+    <style>
+        body {
+            background-color: lightgray ;
+            overflow: hidden;
+        }
+
+        .contain {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+        }
+
+        .rightContain {
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        Input[type=text] {
+            width: 100%;
+            padding: 5px 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #282828;
+            -webkit-transition: 0.5s;
+            transition: 0.5s;
+            outline: none;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        select {
+            width: 100%;
+            padding: 5px 10px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #282828;
+            -webkit-transition: 0.5s;
+            transition: 0.5s;
+            outline: none;
+            border-radius: 5px;
+        }
+
+        .results{
+            overflow: auto;
+            height: 30vh;
+            outline: 1px solid black;
+        }
+
+        .history {
+            overflow: auto;
+            height: 100vw;
+            width: 25vw;
+            border-right: 1px solid black;
+        }
+
+        .formContain {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 70vh;
+        }
+
+        .form {
+            width: 40vw;
+            height: auto;
+        }
+
+        .requestGET {
+            font-weight: bold;
+            color: darkgreen;
+        }
+
+        .requestPOST {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .delete {
+            font-size: 15px;
+        }
+
+        .requests {
+            margin: 1vh 1vw;
+        }
+
+        li{
+            list-style:none;
+        }
+
+        .error{
+            color: red;
+        }
+
+        .sf-toolbarreset{
+            display:none;
+        }
+
+    </style>
+
+    <div class="contain">
+        <div class="history">
+            {% for httprequest in http_requests %}
+                {% if httprequest.method == "GET" %}
+                    <div class="requests">
+                        <br>
+                        <h7 class="requestGET">{{ httprequest.method }}</h7>
+                        <p>{{ httprequest.url }}</p>
+
+                        <p>token : {{ httprequest.token ? httprequest.token|slice(0,25)~'...' : 'No token !' }}</p>
+                        <a href="">
+                            <input type="button" class="delete" value="Modifier"/>
+                        </a>
+                        <a href="">
+                            <input type="button" class="delete" value="Supprimer">
+                        </a>
+                    </div>
+                {% elseif httprequest.method == "POST" %}
+                    <div class="requests">
+                        <br>
+                        <h7 class="requestPOST">{{ httprequest.method }}</h7>
+                        <p>{{ httprequest.url }}</p>
+                        <p>token : {{ httprequest.token ? httprequest.token|slice(0,25)~'...' : 'No token !' }}</p>
+                        <a href="">
+                            <input type="button" class="delete" value="Modifier"/>
+                        </a>
+                        <a href="">
+                            <input type="button" class="delete" value="Supprimer">
+                        </a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="rightContain">
+            <div class="formContain">
+                <div class="form">
+                    {{ form_start(form) }}
+                        {{ form_row(form.method) }}
+                        {{ form_row(form.url) }}
+                        {{ form_row(form.token) }}
+                        {{ form_row(form.submit) }}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            <div class="results">
+                <ul>
+                    {% if buttonValidate == 'True' %}
+                        {% for result in results %}
+                            {% if token == null %}
+                                <br>
+                                <li class="error">error : {{ results.error }}</li>
+                            {% else %}
+                                <br>
+                                <li>id : {{ result.id }}</li>
+                                <li>firstName : {{ result.firstName }}</li>
+                                <li>lastName : {{ result.lastName }}</li>
+                            {% endif %}
+
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
